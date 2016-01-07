@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="custom.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container" style="width:90%">
+        <div class="row">
+            <div class="well col col-xs-4">
+                <div style="display:inline-block"><h2>Server is <span id="online">Online</span><span id="offline">Offline</span></h2></div>
+            </div>
+            <div class="well col col-xs-4">
+                <div style="display:inline-block"><h2>Registered Clients <span id="numProfiles"></span></h2></div>
+            </div>
+            <div class="well col col-xs-4">
+                <div style="display:inline-block"><h2>Likes <span id="numLikes"></span></h2></div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div id="requestsPerSecond"></div>
+        </div>
+        
+        <div class="row">
+            <div class="col col-xs-3">
+                <div id="getsPerSecond"></div>
+            </div>
+            <div class="col col-xs-3">
+                <div id="postsPerSecond"></div>
+            </div>
+            <div class="col col-xs-3">
+                <div id="putsPerSecond"></div>
+            </div>
+            <div class="col col-xs-3">
+                <div id="deletesPerSecond"></div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div id="totalObjects"></div>
+        </div>
+
+    </div>
+
+
+
+
+    <script src="debug.js"></script>
+</body>
+
+
+</html>
