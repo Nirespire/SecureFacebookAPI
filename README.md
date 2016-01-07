@@ -2,8 +2,8 @@
 
 ## Contributors
 
-1. Sanjay Nair
-2. Preethu Thomas
+- [Nirespire](https://github.com/Nirespireh)
+- [Preethu19th](https://github.com/preethu19th)
 
 
 ## Overview
@@ -25,7 +25,7 @@ intended to see it.
 
 To run the program, simply execute `sbt run`.
 This will start the facebook server backend and after a short pause, the client simulator will start as well.
-The number of clients that will be simulated can be adjusted in the application.conf file in the resources folder.
+The number of clients that will be simulated can be adjusted in the `application.conf` file in the resources folder.
 The percentage of clients that behave in certain ways with respect to how they use the server to perform facebook
 actions will remain the same no matter the number of clients specified.
 
@@ -48,6 +48,17 @@ Client actor begins a process by which every second they perform one or many req
 Additionally, there is a single Matchmaker Actor responsible for simulating Clients meeting each other in real life and subsequently creating a connection
 within the facebook server.
 
+## Security
+
+![Objects](/objects.PNG?raw=true "Objects")
+
+The scheme for securely publishing content begins with the prerequisite of every client and the server having a unique public-private key pair with which they can securely encrypt and send content to a single party and only that single part will be able to read the content. The client begins by creating a Facebook object similarly to the previous project implementation, while also generating a 128 bit AES key through secure random number generation. The client encrypts the created object into SecureObject which contains basic metadata about the object like its type and owner ID as well as the original object encrypted via AES128 and represented as a base 64 encoded string. Since the client should have total control over what other clients can read their newly created object, they are responsible for encrypting the AES key with every one of their friends’ public RSA keys. The Client then constructs a SecureMessage object around the SecureObject by encrypting the SecureObject with the server’s public key and signing the message with its own private key. Finally, the client sends the SecureMessage as JSON to the server. The server is responsible for validating the signature of the SecureMessage to ensure that the sender is genuine, decrypting the SecureMessage with its own private key to retrieve the SecureObject, and storing the object and its various encrypted AES keys in appropriate location according to the user that published it. Nowhere in this process does any information about the original Facebook become available to see by the server or any party not authorized by the creator to view the content.
+
+![Publishing Objects](/publishing.PNG?raw=true "Publishing Objects")
+
+Object retrieval from the Client begins with them constructing a SecureRequest object, filling in the appropriate fields, and constructing a SecureMessage around it similarly to the process used for SecureObjects for publishing. Object retrieval from the server’s perspective requires four main steps. First the SecureMessage from the Client must be validated by its signature. Second, the appropriate SecureObject must be retrieved by its ID and type which is known to the server. Third, the appropriate encrypted AES key for the SecureObject for that specific client needs to be retrieved. Since there will be multiple encrypted AES keys for a single object, the server needs to keep track of what keys belong to what client-object combination. Lastly, the server will retrieve the requesting client’s public key that was stored upon client registration, encrypt the SecureObject and encrypted AES key, construct a SecureMessage around it, and send it over to the client. The client must then decrypt the SecureMessage with its private key, decrypt the AES key from the SecureObject with its private key, and finally decrypt the SecureObject contents with the AES key.
+
+![Retrieving Objects](/retrieving.PNG?raw=true "Retrieving Objects")
 
 ## Facebook Graph API Components Referenced
 
@@ -71,23 +82,3 @@ http://www.sciencedirect.com/science/article/pii/S0747563211000379
 Tracii Ryan, Sophia Xenos, Who uses Facebook? An investigation into the relationship between the Big Five, shyness, narcissism, loneliness, and Facebook usage, Computers in Human Behavior, Volume 27, Issue 5, September 2011, Pages 1658-1664, ISSN 0747-5632, http://dx.doi.org/10.1016/j.chb.2011.02.004.
 (http://www.sciencedirect.com/science/article/pii/S0747563211000379)
 Keywords: Facebook; Big Five; Personality; Narcissism; Shyness; Loneliness
-
-## Types of personalities
-- Extraversion
-- Agreeableness
-- Conscientiousness
-- Neuroticism
-- Openness
-
-## Types of behavior
-- Active Social contributions
-    - Puts of posts, pictures, albums
-    - Gets of Posts, pictures, albums, pages
-    - Adding friends
-    - Liking stuff
-- Passive engagement
-    - Adding friends
-    - Gets of Posts, pictures, albums, pages
-- Content Creators/celebrities
-    - Represented as page
-    - Puts of posts, pictures, albums
